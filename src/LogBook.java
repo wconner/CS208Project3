@@ -9,7 +9,7 @@ public class LogBook {
   
   /**
    * Creates an arraylist to keep track of hikers.
-   * /
+   */
   public void Logbook()
   {
     hlog = new ArrayList<Hiker>();
@@ -18,7 +18,7 @@ public class LogBook {
   /**
    * Adds a hiker to the Arraylist
    * @parramiter Hiker hiker: The hiker to be added
-   * /
+   */
   public void addToLog(Hiker hiker)
   {
     hlog.add(hiker)
@@ -28,7 +28,7 @@ public class LogBook {
    * Takes the arraylist and writes it to a 
    * text file named "Logbook.txt".
    * Will overrite if text file is already present.
-   * /
+   */
   public void toText()
   {
     PrintWriter  log = new PrintWriter("Logbook.txt","UTF-8");
