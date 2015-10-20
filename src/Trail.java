@@ -22,6 +22,8 @@ public class Trail {
         return hikerQueue.pop();
     }
 
+    public boolean hasNext(){ return !hikerQueue.isEmpty();}
+
     public int getTrailName(){ return trailName;}
 
 }
