@@ -1,5 +1,6 @@
 import java.util.Random;
 import java.util.Stack;
+
 /**
  * Created by bill on 10/16/15.
  * This is the main class for the simulation.
@@ -7,25 +8,24 @@ import java.util.Stack;
 
 public class Main {
 
-    public static void main(String[] args) {
-        new Main();
-    }
+//    public static void main(String[] args) {
+//        new Main();
+//    }
 
     private static final int NUMTRAILS = 4;
 
     private MClock clock;
     private Stack<Hiker> hikerStack;
     private Trail[] trails;
+    private MyPanel myPanel;
 
-    public Main() {
+    public Main(MyPanel myPanel) {
+        this.myPanel = myPanel;
         clock = new MClock();
         hikerStack = new Stack<Hiker>();
         trails = new Trail[NUMTRAILS];
 
         makeTrails();
-
-        while (clock.getHour() < 22)
-            runLoop();
     }
 
     private void makeTrails() {
@@ -34,11 +34,11 @@ public class Main {
         }
     }
 
-    private void runLoop() {
+    public void runLoop() {
         Random random = new Random();
         int r = random.nextInt(10);
 
-        while (clock.getHour() <= 10) {
+        if (clock.getHour() < 12) {
             /** Generates a random amount of hikers and adds them to the stack. **/
             for (int i = 0; i < r; i++) {
                 if (hikerStack.size() < 10)
@@ -83,7 +83,35 @@ public class Main {
                 }
 
             clock.updateTime();
+            myPanel.updateClock(getTime());
+
+            try {
+                Thread.sleep(300);                 //1000 milliseconds is one second.
+            } catch(InterruptedException ex) {
+                Thread.currentThread().interrupt();
+            }
+
             System.out.println("Time: " + clock.getHour() + ":" + clock.getMinuteTens() + clock.getMinuteOnes());
         }
+    }
+
+    /**
+     * Returns time formatted for the panel.
+     * @return the time
+     */
+    public String getTime(){
+        String time, ampm;
+
+        if(clock.getHour() < 12)
+            ampm = "AM";
+        else
+            ampm = "PM";
+
+        return clock.getHour() + ":" + clock.getMinuteTens() + clock.getMinuteOnes() + ampm;
+    }
+
+    public void setRun(int runtime){
+        while(clock.getHour() < runtime)
+            runLoop();
     }
 }
