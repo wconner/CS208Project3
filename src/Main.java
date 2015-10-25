@@ -4,14 +4,13 @@ import java.util.Stack;
 /**
  * Created by bill on 10/16/15.
  * This is the main class for the simulation.
+ *
+ * I use the stack in this class.  When a hiker is created he is added to the stack
+ * when the stack is full (10 hikers), it is then passed to the Trail
+ * A stack is not necessary, but it is a way to pass the hikers.
  */
 
 public class Main {
-
-//    public static void main(String[] args) {
-//        new Main();
-//    }
-
     private static final int NUMTRAILS = 4;
 
     private MClock clock;
@@ -42,7 +41,7 @@ public class Main {
             /** Generates a random amount of hikers and adds them to the stack. **/
             for (int i = 0; i < r; i++) {
                 if (hikerStack.size() < 10)
-                    hikerStack.add(new Hiker());
+                    hikerStack.push(new Hiker());
                 /** Adds the full stack to the queue **/
                 else {
                     int c = random.nextInt(4);
@@ -56,9 +55,8 @@ public class Main {
             if ((clock.getHour() == 7) && (clock.getMinutes() == 0)) {
                 for (int i = 0; i < NUMTRAILS; i++) {
                     for (int j = 0; j < 20; j++) {
-                        //TODO pass hiker to logbook
-//                        if(trails[i].hasNext())
-//                            System.out.println(trails[i].releaseHiker().getIdNum());
+                        if(trails[i].hasNext())
+                            myPanel.addHikerName(trails[i].releaseHiker().getIdNum(), i + 1);
                     }
                 }
             }
@@ -66,31 +64,23 @@ public class Main {
             if((clock.getHour() >= 7) && (clock.getHour() < 10)){
                 if((clock.getMinutes() % 15) == 0){
                     for (int i = 0; i < NUMTRAILS; i++){
-                        while(trails[i].hasNext()) {
-                            trails[i].releaseHiker();
-                            //TODO pass hiker to logbook
-                        }
+                        while(trails[i].hasNext())
+                            myPanel.addHikerName(trails[i].releaseHiker().getIdNum(), i + 1);
+
                     }
                 }
             }
 
             /** 10:00 AM  Final release of hikers. **/
         if((clock.getHour()) == 10 && (clock.getMinutes() == 0))
-            for(int i = 0; i < NUMTRAILS; i ++)
-                while(trails[i].hasNext()){
-                    trails[i].releaseHiker();
-                    //TODO pass hiker to logbook
-                }
+            for (int i = 0; i < NUMTRAILS; i++) {
+                while (trails[i].hasNext())
+                    myPanel.addHikerName(trails[i].releaseHiker().getIdNum(), i + 1);
+                trails[i].makeFile();
+            }
 
             clock.updateTime();
             myPanel.updateClock(getTime());
-
-            try {
-                Thread.sleep(300);                 //1000 milliseconds is one second.
-            } catch(InterruptedException ex) {
-                Thread.currentThread().interrupt();
-            }
-
             System.out.println("Time: " + clock.getHour() + ":" + clock.getMinuteTens() + clock.getMinuteOnes());
         }
     }
@@ -100,7 +90,7 @@ public class Main {
      * @return the time
      */
     public String getTime(){
-        String time, ampm;
+        String ampm;
 
         if(clock.getHour() < 12)
             ampm = "AM";
